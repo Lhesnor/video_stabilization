@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-from ransac import estimate_rotation
+from ransac import estimate_rotation, estimate_rotation_kabsch
 
 def main(input_path, output_path, focal_length):
     cap = cv2.VideoCapture(input_path)
@@ -44,7 +44,8 @@ def main(input_path, output_path, focal_length):
         if len(pts1) < 4:
             stabilized = frame
         else:
-            R, inliers = estimate_rotation(pts1, pts2, K)
+            #R, inliers = estimate_rotation(pts1, pts2, K)
+            R, inliers = estimate_rotation_kabsch(pts1, pts2, K)
             H = K.dot(R).dot(np.linalg.inv(K))
             H_inv = np.linalg.inv(H)
             H_inv_cumulative = H_inv.dot(H_inv_cumulative)
